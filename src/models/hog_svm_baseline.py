@@ -219,7 +219,14 @@ def main():
         print(f"\nTraining {config['svm_kernel']} SVM with C={config['svm_C']}...")
         
         if config['svm_kernel'] == 'linear':
-            classifier = LinearSVC(C=config['svm_C'], max_iter=5000, random_state=42)
+            # dual=False is faster when n_samples > n_features
+            classifier = LinearSVC(
+                C=config['svm_C'], 
+                max_iter=5000, 
+                random_state=42,
+                dual=False,  # Faster for large datasets
+                verbose=1     # Show progress
+            )
         else:
             classifier = SVC(
                 kernel=config['svm_kernel'],

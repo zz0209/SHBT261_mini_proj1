@@ -480,9 +480,12 @@ def main():
     # Add models (update these paths to your actual results directories)
     # Example paths - adjust based on your actual results
     
-    # HOG + SVM baseline
+    # HOG + SVM baseline (try fast version first, then regular)
+    hog_svm_fast_dir = "results/runs/hog_svm_fast"
     hog_svm_dir = "results/runs/hog_svm_baseline"
-    if Path(hog_svm_dir).exists():
+    if Path(hog_svm_fast_dir).exists() and (Path(hog_svm_fast_dir) / "metrics.json").exists():
+        comparison.add_model("HOG + SVM", hog_svm_fast_dir)
+    elif Path(hog_svm_dir).exists() and (Path(hog_svm_dir) / "metrics.json").exists():
         comparison.add_model("HOG + SVM", hog_svm_dir)
     
     # Find ResNet results (look for the most recent)
