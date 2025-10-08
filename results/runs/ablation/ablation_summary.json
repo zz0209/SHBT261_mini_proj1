@@ -1,0 +1,90 @@
+[
+  {
+    "experiment_name": "1_img64_aug",
+    "config": {
+      "model_name": "resnet18",
+      "pretrained": true,
+      "freeze_backbone": false,
+      "batch_size": 64,
+      "num_workers": 4,
+      "epochs": 20,
+      "optimizer": "adamw",
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "momentum": 0.9,
+      "scheduler": "plateau",
+      "early_stopping_patience": 5,
+      "image_size": 64,
+      "augmentation": true
+    },
+    "test_acc": 0.8722202612072009,
+    "test_f1_macro": 0.8399366120075555,
+    "best_epoch": 18
+  },
+  {
+    "experiment_name": "2_img128_aug",
+    "config": {
+      "model_name": "resnet18",
+      "pretrained": true,
+      "freeze_backbone": false,
+      "batch_size": 64,
+      "num_workers": 4,
+      "epochs": 20,
+      "optimizer": "adamw",
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "momentum": 0.9,
+      "scheduler": "plateau",
+      "early_stopping_patience": 5,
+      "image_size": 128,
+      "augmentation": true
+    },
+    "test_acc": 0.9488175079421108,
+    "test_f1_macro": 0.9421213607416968,
+    "best_epoch": 19
+  },
+  {
+    "experiment_name": "3_img224_aug",
+    "config": {
+      "model_name": "resnet18",
+      "pretrained": true,
+      "freeze_backbone": false,
+      "batch_size": 64,
+      "num_workers": 4,
+      "epochs": 20,
+      "optimizer": "adamw",
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "momentum": 0.9,
+      "scheduler": "plateau",
+      "early_stopping_patience": 5,
+      "image_size": 224,
+      "augmentation": true
+    },
+    "test_acc": 0.9484645252382633,
+    "test_f1_macro": 0.9477440956423301,
+    "best_epoch": 19
+  },
+  {
+    "experiment_name": "4_img224_noaug",
+    "config": {
+      "model_name": "resnet18",
+      "pretrained": true,
+      "freeze_backbone": false,
+      "batch_size": 64,
+      "num_workers": 4,
+      "epochs": 20,
+      "optimizer": "adamw",
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "momentum": 0.9,
+      "scheduler": "plateau",
+      "early_stopping_patience": 5,
+      "image_size": 224,
+      "augmentation": false
+    },
+    "test_acc": 0.9721143663960466,
+    "test_f1_macro": 0.9631656436801957,
+    "best_epoch": 18
+  }
+]

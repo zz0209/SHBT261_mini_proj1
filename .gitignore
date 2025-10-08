@@ -2,8 +2,13 @@
 miniproj1/
 venv/
 
-# Data and results artifacts
-data/
+# Data - raw images only (keep splits)
+data/raw/
+data/processed/
+
+# Large model files
+*.pth
+*.pkl
 
 # Python cache and artifacts
 __pycache__/

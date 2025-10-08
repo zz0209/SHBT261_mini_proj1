@@ -1,0 +1,16 @@
+{
+  "model_name": "resnet50",
+  "pretrained": true,
+  "freeze_backbone": false,
+  "image_size": 224,
+  "batch_size": 32,
+  "augmentation": true,
+  "num_workers": 4,
+  "epochs": 50,
+  "optimizer": "adamw",
+  "learning_rate": 0.001,
+  "weight_decay": 0.0001,
+  "momentum": 0.9,
+  "scheduler": "plateau",
+  "early_stopping_patience": 10
+}

@@ -1,0 +1,79 @@
+====================================================================================================
+MODEL COMPARISON SUMMARY REPORT
+====================================================================================================
+Generated: 2025-10-02 15:14:42
+Number of models compared: 3
+====================================================================================================
+
+OVERALL RANKINGS (by Test Accuracy)
+----------------------------------------------------------------------------------------------------
+3. EfficientNet                   - 0.9714 (97.14%)
+2. ResNet                         - 0.9523 (95.23%)
+1. HOG + SVM                      - 0.8380 (83.80%)
+
+BEST MODEL FOR EACH METRIC
+----------------------------------------------------------------------------------------------------
+Accuracy                      : EfficientNet         (0.9714)
+Mean Per-Class Acc            : EfficientNet         (0.9570)
+Precision (Macro)             : EfficientNet         (0.9658)
+Recall (Macro)                : EfficientNet         (0.9570)
+F1-Score (Macro)              : EfficientNet         (0.9597)
+Precision (Weighted)          : EfficientNet         (0.9733)
+Recall (Weighted)             : EfficientNet         (0.9714)
+F1-Score (Weighted)           : EfficientNet         (0.9713)
+Top-5 Accuracy                : ResNet               (0.9926)
+
+DETAILED METRICS TABLE
+----------------------------------------------------------------------------------------------------
+       Model  Accuracy  Mean Per-Class Acc  Precision (Macro)  Recall (Macro)  F1-Score (Macro)  Precision (Weighted)  Recall (Weighted)  F1-Score (Weighted)  Top-5 Accuracy
+   HOG + SVM  0.837981            0.778502           0.826956        0.778502          0.794881              0.850556           0.837981             0.838737        0.892693
+      ResNet  0.952347            0.947305           0.963814        0.947305          0.952444              0.958346           0.952347             0.951934        0.992587
+EfficientNet  0.971408            0.957021           0.965777        0.957021          0.959709              0.973263           0.971408             0.971301        0.992234
+
+MODEL CONFIGURATIONS
+----------------------------------------------------------------------------------------------------
+
+HOG + SVM:
+  image_size: [128, 128]
+  orientations: 9
+  pixels_per_cell: [8, 8]
+  cells_per_block: [2, 2]
+  svm_type: sgd
+  alpha: 0.0001
+  max_iter: 1000
+
+ResNet:
+  model_name: resnet50
+  pretrained: True
+  freeze_backbone: False
+  image_size: 224
+  batch_size: 32
+  augmentation: True
+  num_workers: 4
+  epochs: 50
+  optimizer: adamw
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  momentum: 0.9
+  scheduler: plateau
+  early_stopping_patience: 10
+
+EfficientNet:
+  model_name: efficientnet_b0
+  pretrained: True
+  freeze_backbone: False
+  image_size: 224
+  batch_size: 32
+  augmentation: True
+  num_workers: 4
+  epochs: 50
+  optimizer: adamw
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  momentum: 0.9
+  scheduler: plateau
+  early_stopping_patience: 10
+
+====================================================================================================
+END OF REPORT
+====================================================================================================
