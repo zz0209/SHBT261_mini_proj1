@@ -419,11 +419,11 @@ EfficientNet-B0 outperforms ResNet50 across all primary metrics except Top-5 acc
 
 The improved per-class accuracy suggests that EfficientNet-B0's architecture generalizes better across diverse categories, possibly due to its more efficient parameter usage and squeeze-and-excitation attention mechanisms that help the model focus on discriminative features.
 
-**Figure 2: EfficientNet-B0 Normalized Confusion Matrix**
+**Figure 2: EfficientNet-B0 Top Confused Category Pairs**
 
-![EfficientNet Confusion Matrix](results/runs/efficientnet_efficientnet_b0_bs32_lr0.001/plots/confusion_matrix_normalized.png)
+![EfficientNet Top Confused Pairs](results/runs/efficientnet_efficientnet_b0_bs32_lr0.001/plots/top_confused_pairs.png)
 
-*Figure 2 displays the normalized confusion matrix for EfficientNet-B0 on the test set. The strong diagonal indicates high accuracy across most categories, with off-diagonal elements revealing occasional confusions between visually similar classes.*
+*Figure 2 shows the most frequently confused category pairs for EfficientNet-B0. Even the most confused pairs have relatively low error counts, reflecting the model's high overall accuracy (97.14%). The visualization reveals systematic confusions between visually similar objects, providing actionable insights for future improvements.*
 
 **Figure 3: EfficientNet-B0 Training Curves**
 
@@ -459,7 +459,7 @@ All models generate comprehensive visualizations saved in their respective `resu
 
 *Figure 5 shows per-class accuracy comparison for the top 20 easiest and hardest categories across all three models. All models perform best on categories with distinctive shapes (vehicles, faces) and struggle with categories having high intra-class variability or limited training examples. The deep learning models (ResNet50, EfficientNet-B0) consistently outperform HOG+SVM across nearly all categories.*
 
-**Confusion Matrices**: The normalized confusion matrices (see Figure 2 for EfficientNet-B0) reveal that most errors occur between visually similar categories. Both ResNet50 and EfficientNet-B0 occasionally confuse water-dwelling creatures (crayfish, lobster, sea_horse) and similar animals. HOG+SVM's confusion matrix shows more scattered errors across many category pairs, indicating less systematic error patterns.
+**Confusion Analysis**: Analysis of confusion patterns (see Figure 2 showing top confused pairs for EfficientNet-B0) reveals that most errors occur between visually similar categories. Both ResNet50 and EfficientNet-B0 occasionally confuse water-dwelling creatures (crayfish, lobster, sea_horse) and similar animals. The top confused pairs visualization provides more actionable insights than the full 102×102 confusion matrix, clearly identifying which specific category pairs require attention. HOG+SVM shows more scattered error patterns across many category pairs, indicating less systematic confusion.
 
 **Per-Class Performance**: Analysis of per-class accuracy charts confirms that categories like accordion, motorbikes, and airplanes achieve near-perfect accuracy across all models, while platypus, water_lilly, and small objects (tick) present challenges even for deep learning approaches.
 
