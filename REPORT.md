@@ -335,6 +335,12 @@ Table 1 presents the complete performance comparison across all three methods on
 | ResNet50        | 95.23%           | 94.73%             | 0.9638            | 0.9473           | 0.9524           | 99.26%    | 56.67 min     |
 | EfficientNet-B0 | **97.14%** | **95.70%**   | **0.9658**  | **0.9570** | **0.9597** | 99.22%    | ~60 min       |
 
+**Figure 1: Model Performance Comparison**
+
+![Model Performance Comparison](results/comparison/metrics_comparison_bars.png)
+
+*Figure 1 shows the comparison of key metrics (Accuracy, Mean Per-Class Accuracy, F1-Score Macro, Top-5 Accuracy) across all three models. EfficientNet-B0 (blue) achieves the best performance in most metrics, followed by ResNet50 (orange), with HOG+SVM (green) serving as the baseline.*
+
 The results demonstrate a clear performance hierarchy. EfficientNet-B0 achieves the best overall accuracy of 97.14%, followed closely by ResNet50 at 95.23%. Both deep learning methods substantially outperform the classical HOG+SVM baseline, which achieves 83.80% accuracy. The gap between the best deep learning model and the traditional approach is 13.34 percentage points, highlighting the significant advantage of learned representations over hand-crafted features for this task.
 
 An important observation is that mean per-class accuracy follows a similar trend to overall accuracy, suggesting that the performance differences are consistent across categories rather than being driven by a few dominant classes. The Top-5 accuracy metric reveals that when allowed to make five guesses, both deep learning models achieve over 99% accuracy, indicating that even when they make errors, the correct class is usually among the top predictions. In contrast, HOG+SVM's Top-5 accuracy of 89.27% shows that its errors are often more severe, with the correct class not appearing in the top five predictions.
@@ -413,6 +419,18 @@ EfficientNet-B0 outperforms ResNet50 across all primary metrics except Top-5 acc
 
 The improved per-class accuracy suggests that EfficientNet-B0's architecture generalizes better across diverse categories, possibly due to its more efficient parameter usage and squeeze-and-excitation attention mechanisms that help the model focus on discriminative features.
 
+**Figure 2: EfficientNet-B0 Normalized Confusion Matrix**
+
+![EfficientNet Confusion Matrix](results/runs/efficientnet_efficientnet_b0_bs32_lr0.001/plots/confusion_matrix_normalized.png)
+
+*Figure 2 displays the normalized confusion matrix for EfficientNet-B0 on the test set. The strong diagonal indicates high accuracy across most categories, with off-diagonal elements revealing occasional confusions between visually similar classes.*
+
+**Figure 3: EfficientNet-B0 Training Curves**
+
+![EfficientNet Training Curves](results/runs/efficientnet_efficientnet_b0_bs32_lr0.001/plots/training_curves.png)
+
+*Figure 3 shows the training and validation loss/accuracy curves for EfficientNet-B0. The model achieves >70% validation accuracy after the first epoch due to ImageNet pre-training, demonstrating effective transfer learning. The gap between training and validation curves indicates some overfitting, justifying our early stopping strategy.*
+
 ### 4.5 Key Performance Observations
 
 Several important patterns emerge from comparing the three methods:
@@ -427,13 +445,23 @@ Several important patterns emerge from comparing the three methods:
 
 ### 4.6 Visualization Analysis
 
-All models generate comprehensive visualizations saved in their respective `results/runs/[model_name]/plots/` directories. Key visualizations include:
+All models generate comprehensive visualizations saved in their respective `results/runs/[model_name]/plots/` directories. This section presents key visualizations that provide deeper insights into model behavior.
 
-**Confusion Matrices**: The normalized confusion matrices reveal that most errors occur between visually similar categories. Both ResNet50 and EfficientNet-B0 occasionally confuse water-dwelling creatures (crayfish, lobster, sea_horse) and similar animals. HOG+SVM's confusion matrix shows more scattered errors across many category pairs.
+**Figure 4: Training Curves Comparison - ResNet50 vs EfficientNet-B0**
 
-**Per-Class Performance**: All models perform best on categories with distinctive shapes (vehicles, faces, certain animals) and struggle with categories having high intra-class variability or limited training examples. Categories like accordion, motorbikes, and airplanes achieve near-perfect accuracy across all models.
+![Training Curves Comparison](results/comparison/training_curves_comparison.png)
 
-**Training Dynamics** (Deep Learning Models): Training curves show both ResNet50 and EfficientNet-B0 achieving >70% validation accuracy after just the first epoch due to ImageNet pre-training. Both models show overfitting in later epochs (training accuracy approaching 100% while validation plateaus), justifying early stopping.
+*Figure 4 compares training dynamics between ResNet50 and EfficientNet-B0. Both models achieve >70% validation accuracy after the first epoch due to ImageNet pre-training, demonstrating effective transfer learning. The models show similar convergence patterns, with validation accuracy plateauing around epoch 15-20 while training accuracy continues to increase, indicating overfitting that justifies early stopping.*
+
+**Figure 5: Per-Class Accuracy Comparison Across Models**
+
+![Per-Class Accuracy Comparison](results/comparison/per_class_accuracy_comparison.png)
+
+*Figure 5 shows per-class accuracy comparison for the top 20 easiest and hardest categories across all three models. All models perform best on categories with distinctive shapes (vehicles, faces) and struggle with categories having high intra-class variability or limited training examples. The deep learning models (ResNet50, EfficientNet-B0) consistently outperform HOG+SVM across nearly all categories.*
+
+**Confusion Matrices**: The normalized confusion matrices (see Figure 2 for EfficientNet-B0) reveal that most errors occur between visually similar categories. Both ResNet50 and EfficientNet-B0 occasionally confuse water-dwelling creatures (crayfish, lobster, sea_horse) and similar animals. HOG+SVM's confusion matrix shows more scattered errors across many category pairs, indicating less systematic error patterns.
+
+**Per-Class Performance**: Analysis of per-class accuracy charts confirms that categories like accordion, motorbikes, and airplanes achieve near-perfect accuracy across all models, while platypus, water_lilly, and small objects (tick) present challenges even for deep learning approaches.
 
 ---
 
@@ -516,6 +544,18 @@ Table 2 presents the complete ablation study results. All models were evaluated 
 | 3          | 224×224   | Yes      | 94.85%           | 0.9477           |
 | 4          | 224×224   | No       | **97.21%** | **0.9632** |
 
+**Figure 6: Ablation Study - Image Resolution Impact**
+
+![Image Size Ablation - 64x64](results/runs/ablation/1_img64_aug/plots/training_curves.png) ![Image Size Ablation - 128x128](results/runs/ablation/2_img128_aug/plots/training_curves.png)
+
+*Figure 6 (left to right): Training curves for 64×64 and 128×128 resolutions. The 64×64 model (left) shows slower convergence and lower final accuracy (87.22%), while 128×128 (right) achieves much better performance (94.88%), approaching the 224×224 baseline (94.85%).*
+
+**Figure 7: Ablation Study - Data Augmentation Impact**
+
+![Augmentation Comparison - With](results/runs/ablation/3_img224_aug/plots/training_curves.png) ![Augmentation Comparison - Without](results/runs/ablation/4_img224_noaug/plots/training_curves.png)
+
+*Figure 7 (left to right): Training curves with augmentation (left, 94.85%) vs without augmentation (right, 97.21%). Surprisingly, the model without augmentation achieves higher accuracy, possibly due to faster convergence in the limited 20-epoch training window.*
+
 ### 6.3 Analysis and Interpretation
 
 **Impact of Image Resolution (Experiments 1-3):**
@@ -543,6 +583,12 @@ These ablation experiments provide actionable insights for practitioners working
 **On Image Resolution**: For datasets similar to Caltech-101, using 128×128 pixel resolution provides an excellent accuracy-efficiency trade-off. While 224×224 is standard for ImageNet pre-trained models, our results show that moderate resolutions can achieve nearly identical performance with reduced computational costs. This is particularly valuable when deploying models on resource-constrained devices.
 
 **On Data Augmentation**: The augmentation effect appears sensitive to training duration and model capacity. For short training runs (≤20 epochs), simpler augmentation strategies or no augmentation might perform better, while longer training allows the model to benefit from augmented data. Practitioners should validate augmentation benefits empirically rather than assuming they always help. Additionally, augmentation strategies should be tailored to the specific dataset characteristics rather than using one-size-fits-all approaches.
+
+**Figure 8: Metrics Heatmap - Comprehensive Model Comparison**
+
+![Metrics Heatmap](results/comparison/metrics_heatmap.png)
+
+*Figure 8 presents a heatmap showing all evaluation metrics across the three models. Darker colors indicate better performance. EfficientNet-B0 (top row) shows the darkest colors across most metrics, visually confirming its superior performance. The heatmap makes it easy to identify that all models struggle with certain metrics on minority classes (lighter colors in some cells).*
 
 ---
 
