@@ -1,7 +1,7 @@
 # Image Classification on Caltech-101 Dataset
 
-**Course**: SHBT 261  
-**Project**: Mini-Project 1  
+**Course**: SHBT 261
+**Project**: Mini-Project 1
 **Date**: October 2, 2025
 
 ---
@@ -9,8 +9,6 @@
 ## Abstract
 
 This project implements and compares three different image classification approaches on the Caltech-101 dataset: a traditional machine learning method using HOG features with SVM classifier, and two deep learning methods based on ResNet50 and EfficientNet-B0 architectures. The dataset contains 102 object categories with approximately 9,000 images total. Our experiments show that deep learning approaches significantly outperform traditional methods, with EfficientNet-B0 achieving **97.14%** test accuracy, compared to ResNet50's 95.23% and HOG+SVM's 83.80%. This represents a 13.34 percentage point improvement from the classical baseline to the best deep learning model. We also investigate the impact of transfer learning and provide detailed analysis of classification errors. All models are evaluated using multiple metrics including accuracy, per-class accuracy, precision, recall, F1-score, and confusion matrices.
-
-**Keywords**: Image Classification, Deep Learning, Transfer Learning, ResNet, EfficientNet, HOG+SVM
 
 ---
 
@@ -35,17 +33,18 @@ Beyond simply reporting accuracy numbers, we aim to comprehensively evaluate eac
 
 A key aspect of this project is investigating the effectiveness of transfer learning for deep learning models. We leverage pre-trained weights from ImageNet, a much larger dataset, and examine how this initialization affects both training dynamics and final performance on our smaller Caltech-101 dataset. Understanding transfer learning is crucial for practical applications where labeled data may be limited, making this investigation particularly relevant for real-world scenarios.
 
-If time permits, we also plan to conduct ablation studies to understand how key design choices impact performance. These experiments will investigate factors such as input image resolution, the presence or absence of data augmentation, and the choice of optimization algorithm. Such studies provide insights into which components are most critical for success and help build intuition about deep learning systems.
+We also conduct ablation studies to understand how key design choices impact performance. These experiments investigate the effects of input image resolution (comparing 64×64, 128×128, and 224×224 pixel inputs) and data augmentation (comparing training with and without augmentation). Such studies provide insights into which components are most critical for success and help build intuition about deep learning systems, revealing that higher resolution improves accuracy up to a point (128×128 provides good trade-offs) and that augmentation effects depend on training duration and model capacity.
 
 Ultimately, through detailed experimentation and analysis, we aim to provide practical insights into which approaches work best for this classification task and understand the underlying reasons. These lessons should generalize beyond this specific dataset and inform future work on similar image classification problems with limited training data.
 
 ### 1.3 Dataset Description
 
 **Caltech-101 Dataset Overview**:
+
 - **Source**: Computational Vision Group at Caltech
 - **Total categories**: 102 (101 object categories + 1 background category)
 - **Total images**: Approximately 9,000 images
-- **Image characteristics**: 
+- **Image characteristics**:
   - Color images with varying resolutions
   - Objects typically centered but with varying scales
   - Natural backgrounds with some clutter
@@ -56,15 +55,16 @@ Ultimately, through detailed experimentation and analysis, we aim to provide pra
 Following standard machine learning practice, we split the dataset into three subsets using stratified sampling to maintain class distribution:
 
 - **Training set**: 70% (12,755 images)
+
   - Used to train model parameters
   - Undergoes data augmentation for deep learning methods
-  
 - **Validation set**: 15% (2,700 images)
+
   - Used for hyperparameter tuning and early stopping
   - Not used for gradient updates
   - Helps monitor overfitting during training
-  
 - **Test set**: 15% (2,833 images)
+
   - Held out completely during training
   - Used only for final performance evaluation
   - Provides unbiased estimate of generalization performance
@@ -74,6 +74,7 @@ The stratified split ensures that each category maintains the same proportional 
 **Category Examples**:
 
 The dataset includes diverse object categories such as:
+
 - **Faces**: frontal face images, easy faces
 - **Animals**: leopards, elephants, dolphins, butterflies, etc.
 - **Vehicles**: airplanes, motorbikes, cars (side view)
@@ -87,19 +88,13 @@ Some categories are relatively easy to classify (e.g., airplanes, motorbikes) du
 
 The remainder of this report is organized as follows:
 
-- **Section 2 (Methods)**: Describes the three classification approaches in detail, including feature extraction methods, model architectures, training procedures, and hyperparameter choices.
-
-- **Section 3 (Experimental Setup)**: Specifies the hardware and software environment, evaluation metrics, and experimental protocols.
-
-- **Section 4 (Results)**: Presents quantitative results including accuracy metrics, confusion matrices, and visualizations comparing the three methods.
-
-- **Section 5 (Ablation Studies)**: Investigates the impact of key design choices like image resolution and data augmentation (if time permits).
-
-- **Section 6 (Discussion)**: Analyzes the results, discusses failure cases, compares the strengths and weaknesses of different approaches, and examines the role of transfer learning.
-
-- **Section 7 (Lessons Learned)**: Reflects on practical insights gained during implementation and experimentation.
-
-- **Section 8 (Conclusion)**: Summarizes key findings and suggests directions for future work.
+- **Section 2 (Methods)**: Describes the three classification approaches in detail, including HOG feature extraction with SVM, ResNet50 architecture, and EfficientNet-B0 design, along with training procedures and hyperparameter configurations.
+- **Section 3 (Experimental Setup)**: Specifies the hardware and software environment, defines all evaluation metrics (accuracy, per-class accuracy, precision, recall, F1-score, Top-5 accuracy, confusion matrices), and explains the rationale for multi-metric evaluation.
+- **Section 4 (Results)**: Presents comprehensive quantitative results for all three methods including detailed performance metrics, identification of best and worst performing categories, and analysis of confusion patterns and training dynamics.
+- **Section 5 (Discussion)**: Analyzes performance differences between classical and deep learning methods, examines challenging categories, discusses the critical role of transfer learning, and provides practical observations about implementation details.
+- **Section 6 (Ablation Studies)**: Investigates the impact of input image resolution (64×64, 128×128, 224×224) and data augmentation (with/without) on ResNet18 performance, revealing insights about optimal design choices for this dataset.
+- **Section 7 (Conclusion)**: Summarizes key findings, emphasizes the importance of transfer learning and parameter-efficient architectures, and provides practical recommendations for similar image classification tasks.
+- **Section 8 (References)**
 
 ---
 
@@ -234,6 +229,7 @@ Throughout training, our implementation automatically saves model checkpoints, c
 ### 3.1 Hardware and Software Environment
 
 **Hardware Configuration**:
+
 - **GPU**: NVIDIA GeForce RTX 5070 Ti
 - **GPU Memory**: 17 GB GDDR6
 - **CPU**: Intel64 Family 6 Model 198 (GenuineIntel)
@@ -241,6 +237,7 @@ Throughout training, our implementation automatically saves model checkpoints, c
 - **Operating System**: Windows 11
 
 **Software Stack**:
+
 - **Programming Language**: Python 3.13
 - **Deep Learning Framework**: PyTorch 2.2+
 - **CUDA Version**: 12.8
@@ -259,41 +256,51 @@ All experiments were conducted on the same hardware to ensure fair comparison. T
 To comprehensively evaluate model performance, we compute the following metrics:
 
 **1. Overall Accuracy**
+
 ```
 Accuracy = (Number of Correct Predictions) / (Total Number of Predictions)
 ```
+
 This is the primary metric but can be misleading with imbalanced classes.
 
 **2. Per-Class Accuracy**
 
 For each category c:
+
 ```
 Per-Class Accuracy_c = (Correct Predictions for c) / (Total Samples in c)
 ```
+
 We also report the mean per-class accuracy, which treats all classes equally regardless of size.
 
 **3. Precision and Recall**
 
 For each class:
+
 ```
 Precision = True Positives / (True Positives + False Positives)
 Recall = True Positives / (True Positives + False Negatives)
 ```
 
 We report both:
+
 - **Macro-average**: Simple average across all classes (treats all classes equally)
 - **Weighted-average**: Weighted by class frequency (accounts for imbalance)
 
 **4. F1-Score**
+
 ```
 F1 = 2 × (Precision × Recall) / (Precision + Recall)
 ```
+
 Harmonic mean of precision and recall, providing a balanced metric.
 
 **5. Top-5 Accuracy** (for deep learning models)
+
 ```
 Top-5 Accuracy = Proportion of samples where true label is in top-5 predictions
 ```
+
 This metric is more forgiving and useful for understanding model confidence.
 
 **6. Confusion Matrix**
@@ -301,6 +308,7 @@ This metric is more forgiving and useful for understanding model confidence.
 A 102×102 matrix where entry (i,j) represents the number of samples from class i predicted as class j. This helps identify which categories are confused with each other.
 
 **Rationale for Multiple Metrics**:
+
 - Overall accuracy can hide poor performance on minority classes
 - Per-class metrics reveal which categories are difficult
 - Precision/recall trade-offs help understand different types of errors
@@ -321,11 +329,11 @@ Table 1 presents the complete performance comparison across all three methods on
 
 **Table 1: Complete Performance Comparison on Test Set**
 
-| Model | Accuracy | Mean Per-Class Acc | Precision (Macro) | Recall (Macro) | F1 (Macro) | Top-5 Acc | Training Time |
-|-------|----------|-------------------|-------------------|----------------|------------|-----------|---------------|
-| HOG + SVM | 83.80% | 77.85% | 0.8270 | 0.7785 | 0.7949 | 89.27% | ~8 min |
-| ResNet50 | 95.23% | 94.73% | 0.9638 | 0.9473 | 0.9524 | 99.26% | 56.67 min |
-| EfficientNet-B0 | **97.14%** | **95.70%** | **0.9658** | **0.9570** | **0.9597** | 99.22% | ~60 min |
+| Model           | Accuracy         | Mean Per-Class Acc | Precision (Macro) | Recall (Macro)   | F1 (Macro)       | Top-5 Acc | Training Time |
+| --------------- | ---------------- | ------------------ | ----------------- | ---------------- | ---------------- | --------- | ------------- |
+| HOG + SVM       | 83.80%           | 77.85%             | 0.8270            | 0.7785           | 0.7949           | 89.27%    | ~8 min        |
+| ResNet50        | 95.23%           | 94.73%             | 0.9638            | 0.9473           | 0.9524           | 99.26%    | 56.67 min     |
+| EfficientNet-B0 | **97.14%** | **95.70%**   | **0.9658**  | **0.9570** | **0.9597** | 99.22%    | ~60 min       |
 
 The results demonstrate a clear performance hierarchy. EfficientNet-B0 achieves the best overall accuracy of 97.14%, followed closely by ResNet50 at 95.23%. Both deep learning methods substantially outperform the classical HOG+SVM baseline, which achieves 83.80% accuracy. The gap between the best deep learning model and the traditional approach is 13.34 percentage points, highlighting the significant advantage of learned representations over hand-crafted features for this task.
 
@@ -336,8 +344,9 @@ An important observation is that mean per-class accuracy follows a similar trend
 The HOG+SVM baseline achieves 83.80% test accuracy, which represents reasonable performance for a method that relies entirely on hand-crafted features and does not learn representations from data. The mean per-class accuracy of 77.85% is notably lower than the overall accuracy, indicating that the model struggles more on minority classes or categories with fewer training examples.
 
 **Precision, Recall, and F1-Score:**
+
 - Macro-averaged precision: 0.8270
-- Macro-averaged recall: 0.7785  
+- Macro-averaged recall: 0.7785
 - Macro-averaged F1-score: 0.7949
 - Weighted F1-score: 0.8387
 
@@ -352,6 +361,7 @@ The training time of approximately 8 minutes (including feature extraction and S
 ResNet50 achieves strong performance with 95.23% test accuracy, representing an 11.43 percentage point improvement over HOG+SVM. The model was trained for 50 epochs but achieved its best validation accuracy of 95.93% at epoch 45, after which early stopping terminated training due to no improvement for 5 additional epochs. The final training accuracy reached 99.77%, indicating some degree of overfitting (4.54 percentage point gap between training and test accuracy), though the generalization performance remains excellent.
 
 **Comprehensive Metrics:**
+
 - Test accuracy: 95.23%
 - Mean per-class accuracy: 94.73%
 - Precision (macro): 0.9638, (weighted): 0.9583
@@ -368,8 +378,9 @@ Faces, Leopards, Motorbikes, accordion, beaver, binocular, bonsai, brain, buddha
 A total of 40 out of 102 categories achieved perfect test accuracy, demonstrating ResNet50's strong performance on well-represented and visually distinctive categories.
 
 **Worst Performing Categories:**
+
 1. platypus: 63.64% (7/11 correct)
-2. water_lilly: 66.67% (8/12 correct)  
+2. water_lilly: 66.67% (8/12 correct)
 3. Faces_easy: 70.99% (92/128 correct)
 4. cannon: 71.43% (5/7 correct)
 5. tick: 75.00% (6/8 correct)
@@ -381,6 +392,7 @@ These difficult categories share common characteristics: limited training exampl
 EfficientNet-B0 achieves the best overall performance with 97.14% test accuracy, surpassing ResNet50 by 1.91 percentage points despite having 79% fewer parameters (5.3M vs 25.6M). This superior parameter efficiency demonstrates the effectiveness of EfficientNet's architecture design and compound scaling approach.
 
 **Comprehensive Metrics:**
+
 - Test accuracy: 97.14%
 - Mean per-class accuracy: 95.70%
 - Precision (macro): 0.9658, (weighted): 0.9733
@@ -391,6 +403,7 @@ EfficientNet-B0 achieves the best overall performance with 97.14% test accuracy,
 EfficientNet-B0 outperforms ResNet50 across all primary metrics except Top-5 accuracy (where ResNet50 has a marginal 0.04% advantage). The mean per-class accuracy of 95.70% is 0.97 percentage points higher than ResNet50's 94.73%, indicating better performance on minority classes. The model converged to its best validation performance around epoch 40-45, similar to ResNet50.
 
 **Comparison to ResNet50:**
+
 - Accuracy improvement: +1.91%
 - Mean per-class accuracy improvement: +0.97%
 - F1-score (macro) improvement: +0.73%
@@ -462,31 +475,74 @@ EfficientNet-B0's squeeze-and-excitation attention mechanisms, learned during Im
 
 HOG+SVM offers 7.5× training speedup (8 vs ~60 minutes) and requires no GPU, but the 13.34% accuracy penalty is substantial. Between deep learning models, EfficientNet-B0 provides superior accuracy with lower memory (4GB vs 6GB) and similar training time, making it the optimal choice for this task. The 79% parameter reduction also enables faster inference and smaller model files for deployment.
 
+### 5.5 Practical Observations and Interpretations
+
+Several practical observations emerged from our implementation and experimentation. Early stopping and adaptive learning rate scheduling proved essential for achieving good performance. The ReduceLROnPlateau scheduler automatically reduced the learning rate when validation accuracy plateaued, eliminating the need for manual schedule design and allowing models to converge to better solutions. Without these mechanisms, training would either plateau prematurely or diverge due to excessive learning rates.
+
+Implementation details significantly impacted results. Proper data normalization using ImageNet statistics, appropriate batch sizes within GPU memory constraints, and correct learning rate ranges were all critical for success. During development, we encountered cases where mismatched preprocessing or inappropriate hyperparameters led to poor performance, highlighting that attention to detail matters as much as architectural choices.
+
+The comprehensive evaluation metrics we employed revealed insights that overall accuracy alone would have missed. Per-class accuracy analysis identified specific struggling categories, confusion matrices exposed systematic errors between similar classes, and the gap between macro and weighted averages revealed class imbalance effects. This multi-faceted evaluation approach provided a much richer understanding of model behavior than single-metric assessment.
+
+Our experiments also revealed limitations that suggest future directions. We did not perform extensive hyperparameter tuning beyond basic configurations due to time constraints, leaving room for potential improvements through systematic search. Ensemble methods combining predictions from multiple models were not explored but could potentially push accuracy higher. Categories with limited training data or high intra-class variability (platypus, water_lilly, Faces_easy) would likely benefit from targeted interventions such as collecting additional training examples, applying class-specific augmentation strategies, or employing techniques like focal loss to address class imbalance during training.
+
 ---
 
-## 6. Lessons Learned
+## 6. Ablation Studies
 
-### 6.1 Technical Insights
+To understand the impact of key design choices on model performance, we conduct ablation experiments using ResNet18 architecture. We choose ResNet18 rather than ResNet50 for these experiments to enable faster iteration while still capturing the essential effects of our design choices. Each experiment is trained for 20 epochs with identical hyperparameters (AdamW optimizer, learning rate 0.001, batch size 64) except for the factor being studied.
 
-**Transfer Learning is Critical**: The overwhelming value of ImageNet pre-training for small datasets. Both deep learning models achieved strong performance within epochs thanks to pre-training, impossible from scratch with 12,755 images.
+### 6.1 Experimental Design
 
-**Architecture Matters Moderately**: EfficientNet-B0 outperformed ResNet50 by 1.91%, modest compared to the 11.43% gain from switching to deep learning. Using any modern pre-trained CNN captures most potential performance, with architectural refinements providing incremental improvements.
+We investigate two critical factors identified in the project requirements:
 
-**Data Augmentation Prevents Overfitting**: Aggressive augmentation (crops, flips, rotations, color jitter) was essential for preventing overfitting with millions of parameters on limited data.
+**Ablation Study 1: Impact of Input Image Resolution**
 
-**Comprehensive Evaluation Reveals Issues**: Per-class accuracy, macro-averaged metrics, and confusion matrices revealed minority class struggles hidden by overall accuracy. This justifies multi-metric evaluation.
+We train three ResNet18 models with identical configurations except for input image size: 64×64, 128×128, and 224×224 pixels. All three experiments use data augmentation. This study examines the trade-off between detail preservation (higher resolution captures finer features) and computational efficiency (smaller images train faster and require less memory). The hypothesis is that larger images should improve accuracy by preserving more visual detail, but there may be diminishing returns beyond a certain resolution.
 
-### 6.2 Practical Insights
+**Ablation Study 2: Impact of Data Augmentation**
 
-**Hyperparameter Mechanisms Are Essential**: Early stopping and learning rate scheduling proved crucial. ReduceLROnPlateau automatically adapted learning rate based on validation performance, removing manual schedule design.
+We compare two ResNet18 models trained on 224×224 images, one with our full augmentation pipeline (random crops, horizontal flips, rotations, and color jitter) and one without any augmentation. This study examines whether data augmentation, which artificially increases training set diversity, actually improves generalization performance or potentially hinders learning by introducing too much variation. The standard expectation is that augmentation should reduce overfitting and improve test accuracy.
 
-**Implementation Details Matter**: Proper data normalization (ImageNet statistics), appropriate batch sizes, and correct learning rates significantly impact results. Minor preprocessing errors can substantially hurt performance.
+### 6.2 Results
 
-**Computational Resources Enable Iteration**: Access to RTX 5070 Ti allowed experimenting with different models and hyperparameters. With limited compute, strategic prioritization is necessary.
+Table 2 presents the complete ablation study results. All models were evaluated on the same held-out test set of 2,833 images.
 
-### 6.3 Limitations and Future Directions
+**Table 2: Ablation Study Results**
 
-Our study has limitations suggesting future work: no extensive hyperparameter tuning due to time constraints, no ensemble methods explored, and limited to three methods (could include Vision Transformers or ConvNeXt). Challenging categories could benefit from more training data, targeted augmentation, focal loss for imbalance, or few-shot learning techniques.
+| Experiment | Image Size | Data Aug | Test Accuracy    | F1-Score (Macro) |
+| ---------- | ---------- | -------- | ---------------- | ---------------- |
+| 1          | 64×64     | Yes      | 87.22%           | 0.8399           |
+| 2          | 128×128   | Yes      | 94.88%           | 0.9421           |
+| 3          | 224×224   | Yes      | 94.85%           | 0.9477           |
+| 4          | 224×224   | No       | **97.21%** | **0.9632** |
+
+### 6.3 Analysis and Interpretation
+
+**Impact of Image Resolution (Experiments 1-3):**
+
+The results reveal a strong positive effect of image resolution when increasing from 64×64 to 128×128 pixels, with test accuracy improving by 7.66 percentage points (87.22% → 94.88%). This substantial gain demonstrates that preserving visual detail is crucial for distinguishing between the 102 Caltech-101 categories. At 64×64 resolution, fine-grained features like textures, small object parts, and subtle shape variations are lost, hampering classification performance.
+
+However, further increasing resolution from 128×128 to 224×224 yields essentially no improvement (94.88% vs 94.85%, a negligible 0.03% decrease). This plateau suggests that 128×128 pixels already captures sufficient detail for most Caltech-101 categories, and the additional detail at 224×224 does not provide meaningful discriminative information for this dataset. This finding has practical implications: for Caltech-101-like tasks, using 128×128 images could reduce computational cost (training is 10% faster) without sacrificing accuracy.
+
+**Impact of Data Augmentation (Experiments 3-4):**
+
+Surprisingly, removing data augmentation led to higher test accuracy (97.21% without augmentation vs 94.85% with augmentation, a 2.36 percentage point improvement). This counterintuitive result contradicts the standard assumption that augmentation always improves generalization. Several factors may explain this unexpected finding.
+
+First, the relatively short training duration (20 epochs) may not provide sufficient iterations for the model to learn from the augmented data distribution. Data augmentation effectively makes each epoch "see" different variations of the same images, which can slow convergence. With only 20 epochs, the augmented model may not have fully converged to its optimal solution, while the non-augmented model could fit the static training set more quickly.
+
+Second, our aggressive augmentation strategy (combining multiple transformations) may introduce excessive variability for some categories. For instance, large rotations or extreme color jitter might produce unrealistic views that confuse the model rather than helping it learn invariances. A more carefully tuned augmentation policy might yield better results.
+
+Third, with ImageNet pre-training, the model already starts with robust features that generalize reasonably well. The limited Caltech-101 training set (12,755 images) combined with pre-trained weights may not benefit as much from augmentation as training from scratch would. The pre-trained features may already encode sufficient invariances.
+
+It is important to note that this result applies specifically to our experimental configuration (ResNet18, 20 epochs, specific augmentation choices). Our earlier ResNet50 experiment with 50 epochs and augmentation achieved 95.23%, suggesting that longer training or different model capacities might show different augmentation effects. This finding highlights that ablation studies can reveal context-dependent effects and that design choices should be validated for each specific scenario rather than blindly following general rules.
+
+### 6.4 Practical Implications
+
+These ablation experiments provide actionable insights for practitioners working on similar image classification tasks:
+
+**On Image Resolution**: For datasets similar to Caltech-101, using 128×128 pixel resolution provides an excellent accuracy-efficiency trade-off. While 224×224 is standard for ImageNet pre-trained models, our results show that moderate resolutions can achieve nearly identical performance with reduced computational costs. This is particularly valuable when deploying models on resource-constrained devices.
+
+**On Data Augmentation**: The augmentation effect appears sensitive to training duration and model capacity. For short training runs (≤20 epochs), simpler augmentation strategies or no augmentation might perform better, while longer training allows the model to benefit from augmented data. Practitioners should validate augmentation benefits empirically rather than assuming they always help. Additionally, augmentation strategies should be tailored to the specific dataset characteristics rather than using one-size-fits-all approaches.
 
 ---
 
@@ -495,12 +551,10 @@ Our study has limitations suggesting future work: no extensive hyperparameter tu
 This project successfully compared three image classification approaches on Caltech-101, demonstrating substantial deep learning advantages over classical methods.
 
 **Key Findings:**
+
 1. **Deep learning significantly outperforms classical ML**: EfficientNet-B0 (97.14%), ResNet50 (95.23%) vs HOG+SVM (83.80%), representing 82% relative error reduction.
-
 2. **Parameter efficiency matters**: EfficientNet-B0 with 79% fewer parameters achieved 1.91% higher accuracy than ResNet50 through superior architecture design.
-
 3. **Transfer learning is crucial**: ImageNet pre-training enabled >70% validation accuracy after one epoch, impossible with random initialization on this small dataset.
-
 4. **Comprehensive evaluation reveals insights**: Per-class analysis identified challenging categories (platypus, water_lilly), confusion matrices revealed systematic errors between similar classes, and Top-5 accuracy distinguished close misses from fundamental errors.
 
 **Practical Recommendation**: For image classification with limited training data, use modern pre-trained architectures (like EfficientNet) with data augmentation, adaptive learning rate scheduling, and early stopping. This achieves excellent performance (>97% on Caltech-101) with reasonable computational requirements.
@@ -512,24 +566,22 @@ These insights generalize beyond Caltech-101 to other vision tasks with limited 
 ## 8. References
 
 1. He, K., Zhang, X., Ren, S., & Sun, J. (2016). Deep Residual Learning for Image Recognition. *2016 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 770-778.
-
 2. Tan, M., & Le, Q. V. (2019). EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks. *Proceedings of the 36th International Conference on Machine Learning (ICML)*, 6105-6114.
-
 3. Dalal, N., & Triggs, B. (2005). Histograms of Oriented Gradients for Human Detection. *2005 IEEE Computer Society Conference on Computer Vision and Pattern Recognition (CVPR)*, 886-893.
-
 4. Fei-Fei, L., Fergus, R., & Perona, P. (2007). Learning Generative Visual Models from Few Training Examples: An Incremental Bayesian Approach Tested on 101 Object Categories. *Computer Vision and Image Understanding*, 106(1), 59-70.
-
 5. Deng, J., Dong, W., Socher, R., Li, L.-J., Li, K., & Fei-Fei, L. (2009). ImageNet: A Large-Scale Hierarchical Image Database. *2009 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)*, 248-255.
-
 6. Loshchilov, I., & Hutter, F. (2019). Decoupled Weight Decay Regularization. *International Conference on Learning Representations (ICLR)*.
-
 7. Sandler, M., Howard, A., Zhu, M., Zhmoginov, A., & Chen, L.-C. (2018). MobileNetV2: Inverted Residuals and Linear Bottlenecks. *2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)*, 4510-4520.
-
 8. Hu, J., Shen, L., & Sun, G. (2018). Squeeze-and-Excitation Networks. *2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)*, 7132-7141.
 
 ---
 
-**Report Complete**
+## Acknowledgment of AI Assistance
 
-*All code, trained models, and detailed results are available at: `C:\Users\zz\Desktop\school\SHBT 261\Proj1`*
+This project utilized AI assistance (Claude, Anthropic) for code development and report writing. Specifically:
 
+**Code Implementation**: AI assistance was used to generate initial implementations of the training scripts (ResNet, EfficientNet, HOG+SVM), data loading pipelines, evaluation metrics computation, and visualization utilities. All generated code was reviewed, tested, and validated against actual experimental results to ensure correctness.
+
+**Report Writing**: AI assistance was used to structure and draft portions of this report, including formatting the Methods section, organizing the Results presentation, and refining the Discussion analysis. All reported numerical results, experimental findings, and interpretations are based on actual experiments conducted on our hardware with our implementations.
+
+**Verification**: All reported results can be independently verified by examining the saved metrics files in `results/runs/*/metrics.json` and the training logs. No fabricated data was used in this report.
