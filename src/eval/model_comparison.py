@@ -169,13 +169,13 @@ class ModelComparison:
                 height = bar.get_height()
                 ax.text(bar.get_x() + bar.get_width()/2., height,
                        f'{val:.4f}\n({val*100:.2f}%)',
-                       ha='center', va='bottom', fontsize=10, fontweight='bold')
+                       ha='center', va='bottom', fontsize=9, fontweight='bold')
             
             ax.set_ylabel('Score', fontsize=12, fontweight='bold')
-            ax.set_title(metric_title, fontsize=14, fontweight='bold')
+            ax.set_title(metric_title, fontsize=14, fontweight='bold', pad=20)  # Add padding to title
             ax.set_xticks(range(len(models)))
             ax.set_xticklabels(models, rotation=45, ha='right', fontsize=11)
-            ax.set_ylim(0, 1.0)
+            ax.set_ylim(0, 1.15)  # Increase upper limit to give space for labels
             ax.grid(axis='y', alpha=0.3, linestyle='--')
             
             # Highlight best model
