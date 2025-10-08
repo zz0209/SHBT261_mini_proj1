@@ -585,3 +585,22 @@ This project utilized AI assistance (Claude, Anthropic) for code development and
 **Report Writing**: AI assistance was used to structure and draft portions of this report, including formatting the Methods section, organizing the Results presentation, and refining the Discussion analysis. All reported numerical results, experimental findings, and interpretations are based on actual experiments conducted on our hardware with our implementations.
 
 **Verification**: All reported results can be independently verified by examining the saved metrics files in `results/runs/*/metrics.json` and the training logs. No fabricated data was used in this report.
+
+---
+
+## Code and Results Availability
+
+All source code, trained models, experimental results, and visualizations from this project are publicly available on GitHub:
+
+**Repository**: https://github.com/zz0209/SHBT261_mini_proj1
+
+The repository includes:
+- Complete implementation code for all three methods (HOG+SVM, ResNet50, EfficientNet-B0)
+- Data loading and preprocessing pipelines
+- Comprehensive evaluation and visualization utilities
+- All training scripts and ablation study configurations
+- Saved model checkpoints and complete metrics for all experiments
+- All generated figures and confusion matrices (51 visualizations total)
+- Detailed documentation and usage instructions
+
+Readers can reproduce all experiments by following the instructions in the repository's README files.
